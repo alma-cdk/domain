@@ -36,7 +36,7 @@ This construct is still versioned with `v0` major version and breaking changes m
 
 ```ts
 import { Domain } from '@alma-cdk/domain';
-import { Distribution } from 'aws-cdk-lib/aws-cloudfront';
+import * as cloudfront from 'aws-cdk-lib/aws-cloudfront';
 ```
 ```ts
 const myBucket: s3.IBucket; // Just for example
@@ -46,7 +46,7 @@ const domain = new Domain(this, 'Domain', {
   subdomain: 'foobar', // optional subdomain, can be multilevel
 });
 
-const distribution = new Distribution(this, 'Distribution', {
+const distribution = new cloudfront.Distribution(this, 'Distribution', {
   defaultBehavior: {
     origin: new origins.S3Origin(myBucket),
   },
@@ -54,6 +54,7 @@ const distribution = new Distribution(this, 'Distribution', {
   domainNames: [domain.fqdn], // foobar.example.com
 })
 
+// assign CloudFront distribution to given fqdn with A + AAAA records
 domain.assign(new targets.CloudFrontTarget(distribution))
 ```
 
