@@ -37,6 +37,8 @@ This construct is still versioned with `v0` major version and breaking changes m
 ```ts
 import { Domain } from '@alma-cdk/domain';
 import * as cloudfront from 'aws-cdk-lib/aws-cloudfront';
+import * as origins from 'aws-cdk-lib/aws-cloudfront-origins';
+import * as s3 from 'aws-cdk-lib/aws-s3';
 ```
 ```ts
 const myBucket: s3.IBucket; // Just for example
