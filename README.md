@@ -41,7 +41,7 @@ import * as cloudfront from 'aws-cdk-lib/aws-cloudfront';
 ```ts
 const domain = new Domain(this, 'Domain', {
   zone: 'example.com', // retrieve the zone via lookup, or provide IHostedZone
-  subdomain: 'foobar', // optional subdomain, can be multilevel
+  subdomain: 'foobar', // optional subdomain
 });
 
 const distribution = new cloudfront.Distribution(this, 'Distribution', {
