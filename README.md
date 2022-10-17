@@ -37,21 +37,16 @@ This construct is still versioned with `v0` major version and breaking changes m
 ```ts
 import { Domain } from '@alma-cdk/domain';
 import * as cloudfront from 'aws-cdk-lib/aws-cloudfront';
-import * as origins from 'aws-cdk-lib/aws-cloudfront-origins';
-import * as s3 from 'aws-cdk-lib/aws-s3';
 ```
 ```ts
-const myBucket: s3.IBucket; // Just for example
-
 const domain = new Domain(this, 'Domain', {
   zone: 'example.com', // retrieve the zone via lookup, or provide IHostedZone
   subdomain: 'foobar', // optional subdomain, can be multilevel
 });
 
 const distribution = new cloudfront.Distribution(this, 'Distribution', {
-  defaultBehavior: {
-    origin: new origins.S3Origin(myBucket),
-  },
+  /* other cloudfront configuration values removed for brevity */
+
   certificate: domain.certificate, // reference to created ICertificate
   domainNames: [domain.fqdn], // foobar.example.com
 })
