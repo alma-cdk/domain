@@ -3,19 +3,40 @@ import * as route53 from 'aws-cdk-lib/aws-route53';
 import { Construct } from 'constructs';
 import { DomainCertificate } from './certificate';
 import { IDomain } from './contract';
+import { addError } from './errors/add';
 import { FQDN } from './fqdn';
 import { DomainProps } from './props';
 import { DomainZone } from './zone';
 
 
 export class Domain extends Construct implements IDomain {
+
+  /**
+   * Route53 hosted zone used to assign the domain into.
+   */
   readonly zone: route53.IHostedZone;
+
+  /**
+   * Fully-qualified domain name.
+   */
   readonly fqdn: string;
+
+  /**
+   * Certificate Manager certificate.
+   */
   readonly certificate: acm.ICertificate;
 
   private disableIpV6: boolean;
   private region: string;
+  private assigned: boolean = false;
 
+  /**
+   * Initializing a `new Domain` construct instance will lookup the Route53 hosted zone
+   * and define ACM DNS-validated certificate.
+   *
+   * After initialization you must use `assign(alias)` method to to configure `A`/`AAAA` records
+   * with the `alias` as the record value.
+   */
   constructor(scope: Construct, id: string, props: DomainProps) {
     super(scope, id);
 
@@ -46,16 +67,41 @@ export class Domain extends Construct implements IDomain {
     });
   }
 
+  /**
+   * Assign an alias record target with the fully-qualified domain name.
+   * This will create both `A` & `AAAA` DNS records, unless `disableIpV6` was set to `true`
+   * during initialization of `Domain` construct (resulting in only `A` record being created).
+   *
+   * @param alias Route53 alias record target used to assign as A/AAAA record value.
+   *
+   * @example
+   * domain.assign(new targets.CloudFrontTarget(distribution))
+   */
   public assign(alias: route53.IAliasRecordTarget): void {
+
+    // prevent accidental reassignment
+    if (this.assigned) {
+      addError(this, `Domain already assigned: ${this.fqdn}`);
+      return;
+    }
+
+    // set assigned state flag
+    this.assigned = true;
+
+    // set IPv4 record
     new route53.ARecord(this, 'AliasRecordIpV4', {
       zone: this.zone,
       target: route53.RecordTarget.fromAlias(alias),
     });
-    if (!this.disableIpV6) {
-      new route53.AaaaRecord(this, 'AliasRecordIpV6', {
-        zone: this.zone,
-        target: route53.RecordTarget.fromAlias(alias),
-      });
-    }
+
+    // return early if IPv6 is disabled
+    if (this.disableIpV6) return;
+
+    // set IPv6 record
+    new route53.AaaaRecord(this, 'AliasRecordIpV6', {
+      zone: this.zone,
+      target: route53.RecordTarget.fromAlias(alias),
+    });
+
   }
 }

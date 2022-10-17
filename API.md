@@ -45,7 +45,7 @@ new Domain(scope: Construct, id: string, props: DomainProps)
 | **Name** | **Description** |
 | --- | --- |
 | <code><a href="#@alma-cdk/domain.Domain.toString">toString</a></code> | Returns a string representation of this construct. |
-| <code><a href="#@alma-cdk/domain.Domain.assign">assign</a></code> | *No description.* |
+| <code><a href="#@alma-cdk/domain.Domain.assign">assign</a></code> | Assign an alias record target with the fully-qualified domain name. |
 
 ---
 
@@ -63,9 +63,23 @@ Returns a string representation of this construct.
 public assign(alias: IAliasRecordTarget): void
 ```
 
+Assign an alias record target with the fully-qualified domain name.
+
+This will create both `A` & `AAAA` DNS records, unless `disableIpV6` was set to `true`
+during initialization of `Domain` construct (resulting in only `A` record being created).
+
+*Example*
+
+```typescript
+domain.assign(new targets.CloudFrontTarget(distribution))
+```
+
+
 ###### `alias`<sup>Required</sup> <a name="alias" id="@alma-cdk/domain.Domain.assign.parameter.alias"></a>
 
 - *Type:* aws-cdk-lib.aws_route53.IAliasRecordTarget
+
+Route53 alias record target used to assign as A/AAAA record value.
 
 ---
 
@@ -100,9 +114,9 @@ Any object.
 | **Name** | **Type** | **Description** |
 | --- | --- | --- |
 | <code><a href="#@alma-cdk/domain.Domain.property.node">node</a></code> | <code>constructs.Node</code> | The tree node. |
-| <code><a href="#@alma-cdk/domain.Domain.property.certificate">certificate</a></code> | <code>aws-cdk-lib.aws_certificatemanager.ICertificate</code> | *No description.* |
-| <code><a href="#@alma-cdk/domain.Domain.property.fqdn">fqdn</a></code> | <code>string</code> | *No description.* |
-| <code><a href="#@alma-cdk/domain.Domain.property.zone">zone</a></code> | <code>aws-cdk-lib.aws_route53.IHostedZone</code> | *No description.* |
+| <code><a href="#@alma-cdk/domain.Domain.property.certificate">certificate</a></code> | <code>aws-cdk-lib.aws_certificatemanager.ICertificate</code> | Certificate Manager certificate. |
+| <code><a href="#@alma-cdk/domain.Domain.property.fqdn">fqdn</a></code> | <code>string</code> | Fully-qualified domain name. |
+| <code><a href="#@alma-cdk/domain.Domain.property.zone">zone</a></code> | <code>aws-cdk-lib.aws_route53.IHostedZone</code> | Route53 hosted zone used to assign the domain into. |
 
 ---
 
@@ -126,6 +140,8 @@ public readonly certificate: ICertificate;
 
 - *Type:* aws-cdk-lib.aws_certificatemanager.ICertificate
 
+Certificate Manager certificate.
+
 ---
 
 ##### `fqdn`<sup>Required</sup> <a name="fqdn" id="@alma-cdk/domain.Domain.property.fqdn"></a>
@@ -135,6 +151,8 @@ public readonly fqdn: string;
 ```
 
 - *Type:* string
+
+Fully-qualified domain name.
 
 ---
 
@@ -146,12 +164,16 @@ public readonly zone: IHostedZone;
 
 - *Type:* aws-cdk-lib.aws_route53.IHostedZone
 
+Route53 hosted zone used to assign the domain into.
+
 ---
 
 
 ## Structs <a name="Structs" id="Structs"></a>
 
 ### DomainProps <a name="DomainProps" id="@alma-cdk/domain.DomainProps"></a>
+
+Properties to configure the domain (zone and certificate).
 
 #### Initializer <a name="Initializer" id="@alma-cdk/domain.DomainProps.Initializer"></a>
 
@@ -165,11 +187,11 @@ const domainProps: DomainProps = { ... }
 
 | **Name** | **Type** | **Description** |
 | --- | --- | --- |
-| <code><a href="#@alma-cdk/domain.DomainProps.property.zone">zone</a></code> | <code>string \| aws-cdk-lib.aws_route53.IHostedZone</code> | *No description.* |
-| <code><a href="#@alma-cdk/domain.DomainProps.property.certificate">certificate</a></code> | <code>aws-cdk-lib.aws_certificatemanager.ICertificate</code> | *No description.* |
-| <code><a href="#@alma-cdk/domain.DomainProps.property.disableIpV6">disableIpV6</a></code> | <code>boolean</code> | *No description.* |
-| <code><a href="#@alma-cdk/domain.DomainProps.property.region">region</a></code> | <code>string</code> | *No description.* |
-| <code><a href="#@alma-cdk/domain.DomainProps.property.subdomain">subdomain</a></code> | <code>string</code> | *No description.* |
+| <code><a href="#@alma-cdk/domain.DomainProps.property.zone">zone</a></code> | <code>string \| aws-cdk-lib.aws_route53.IHostedZone</code> | Provide either a fully-qualified domain name as string to perform a hosted zone lookup or a previously defined hosted zone as `route53.IHostedZone`. |
+| <code><a href="#@alma-cdk/domain.DomainProps.property.certificate">certificate</a></code> | <code>aws-cdk-lib.aws_certificatemanager.ICertificate</code> | Provide your own pre-existing certificate. |
+| <code><a href="#@alma-cdk/domain.DomainProps.property.disableIpV6">disableIpV6</a></code> | <code>boolean</code> | Set to true to disable IPv6 `AAAA` record creation. |
+| <code><a href="#@alma-cdk/domain.DomainProps.property.region">region</a></code> | <code>string</code> | AWS Region to deploy the certificate into. |
+| <code><a href="#@alma-cdk/domain.DomainProps.property.subdomain">subdomain</a></code> | <code>string</code> | Provide subdomain or leave undefined to use the zone apex domain. |
 
 ---
 
@@ -181,6 +203,8 @@ public readonly zone: string | IHostedZone;
 
 - *Type:* string | aws-cdk-lib.aws_route53.IHostedZone
 
+Provide either a fully-qualified domain name as string to perform a hosted zone lookup or a previously defined hosted zone as `route53.IHostedZone`.
+
 ---
 
 ##### `certificate`<sup>Optional</sup> <a name="certificate" id="@alma-cdk/domain.DomainProps.property.certificate"></a>
@@ -191,6 +215,11 @@ public readonly certificate: ICertificate;
 
 - *Type:* aws-cdk-lib.aws_certificatemanager.ICertificate
 
+Provide your own pre-existing certificate.
+
+If not provided, a new certificate will be created
+by default.
+
 ---
 
 ##### `disableIpV6`<sup>Optional</sup> <a name="disableIpV6" id="@alma-cdk/domain.DomainProps.property.disableIpV6"></a>
@@ -200,6 +229,9 @@ public readonly disableIpV6: boolean;
 ```
 
 - *Type:* boolean
+- *Default:* false
+
+Set to true to disable IPv6 `AAAA` record creation.
 
 ---
 
@@ -210,6 +242,12 @@ public readonly region: string;
 ```
 
 - *Type:* string
+- *Default:* "us-east-1"
+
+AWS Region to deploy the certificate into.
+
+Defaults to `us-east-1` which is the only region where
+ACM certificates can be deployed to CloudFront.
 
 ---
 
@@ -221,6 +259,10 @@ public readonly subdomain: string;
 
 - *Type:* string
 
+Provide subdomain or leave undefined to use the zone apex domain.
+
+If subdomain provided, the resulting FQDN will be `subdomain.zone`.
+
 ---
 
 
@@ -230,23 +272,39 @@ public readonly subdomain: string;
 
 - *Implemented By:* <a href="#@alma-cdk/domain.Domain">Domain</a>, <a href="#@alma-cdk/domain.IDomain">IDomain</a>
 
+Interface contract implemented by Domain construct.
+
 #### Methods <a name="Methods" id="Methods"></a>
 
 | **Name** | **Description** |
 | --- | --- |
-| <code><a href="#@alma-cdk/domain.IDomain.assign">assign</a></code> | *No description.* |
+| <code><a href="#@alma-cdk/domain.IDomain.assign">assign</a></code> | Assign an alias record target with the fully-qualified domain name. |
 
 ---
 
 ##### `assign` <a name="assign" id="@alma-cdk/domain.IDomain.assign"></a>
 
 ```typescript
-public assign(target: IAliasRecordTarget): void
+public assign(alias: IAliasRecordTarget): void
 ```
 
-###### `target`<sup>Required</sup> <a name="target" id="@alma-cdk/domain.IDomain.assign.parameter.target"></a>
+Assign an alias record target with the fully-qualified domain name.
+
+This will create both `A` & `AAAA` DNS records, unless `disableIpV6` was set to `true`
+during initialization of `Domain` construct (resulting in only `A` record being created).
+
+*Example*
+
+```typescript
+domain.assign(new targets.CloudFrontTarget(distribution))
+```
+
+
+###### `alias`<sup>Required</sup> <a name="alias" id="@alma-cdk/domain.IDomain.assign.parameter.alias"></a>
 
 - *Type:* aws-cdk-lib.aws_route53.IAliasRecordTarget
+
+Route53 alias record target used to assign as A/AAAA record value.
 
 ---
 
@@ -254,9 +312,9 @@ public assign(target: IAliasRecordTarget): void
 
 | **Name** | **Type** | **Description** |
 | --- | --- | --- |
-| <code><a href="#@alma-cdk/domain.IDomain.property.certificate">certificate</a></code> | <code>aws-cdk-lib.aws_certificatemanager.ICertificate</code> | *No description.* |
-| <code><a href="#@alma-cdk/domain.IDomain.property.fqdn">fqdn</a></code> | <code>string</code> | *No description.* |
-| <code><a href="#@alma-cdk/domain.IDomain.property.zone">zone</a></code> | <code>aws-cdk-lib.aws_route53.IHostedZone</code> | *No description.* |
+| <code><a href="#@alma-cdk/domain.IDomain.property.certificate">certificate</a></code> | <code>aws-cdk-lib.aws_certificatemanager.ICertificate</code> | Certificate Manager certificate. |
+| <code><a href="#@alma-cdk/domain.IDomain.property.fqdn">fqdn</a></code> | <code>string</code> | Fully-qualified domain name. |
+| <code><a href="#@alma-cdk/domain.IDomain.property.zone">zone</a></code> | <code>aws-cdk-lib.aws_route53.IHostedZone</code> | Route53 hosted zone used to assign the domain into. |
 
 ---
 
@@ -268,6 +326,8 @@ public readonly certificate: ICertificate;
 
 - *Type:* aws-cdk-lib.aws_certificatemanager.ICertificate
 
+Certificate Manager certificate.
+
 ---
 
 ##### `fqdn`<sup>Required</sup> <a name="fqdn" id="@alma-cdk/domain.IDomain.property.fqdn"></a>
@@ -278,6 +338,8 @@ public readonly fqdn: string;
 
 - *Type:* string
 
+Fully-qualified domain name.
+
 ---
 
 ##### `zone`<sup>Required</sup> <a name="zone" id="@alma-cdk/domain.IDomain.property.zone"></a>
@@ -287,6 +349,8 @@ public readonly zone: IHostedZone;
 ```
 
 - *Type:* aws-cdk-lib.aws_route53.IHostedZone
+
+Route53 hosted zone used to assign the domain into.
 
 ---
 

@@ -13,7 +13,7 @@
 
   <div align="left">
 
-  Simplies creation of subdomain with a TLS certificate and configuration with services like AWS CloudFront.
+  Simplifies creation of subdomain with a TLS certificate and configuration with services like AWS CloudFront.
 
   </div>
   <br/>
