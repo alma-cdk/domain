@@ -29,16 +29,16 @@ export interface IDomain {
   readonly enableIpv6: boolean;
 
   /**
-   * Assign an alias record target with the fully-qualified domain name.
+   * Assign an alias as record target with the fully-qualified domain name.
    * This will create both `A` & `AAAA` DNS records, unless `disableIpV6` was set to `true`
    * during initialization of `Domain` construct (resulting in only `A` record being created).
    *
    * @param alias Route53 alias record target used to assign as A/AAAA record value.
    *
    * @example
-   * domain.assign(new targets.CloudFrontTarget(distribution))
+   * domain.addTarget(new targets.CloudFrontTarget(distribution))
    */
-  assign(alias: route53.IAliasRecordTarget): void;
+  addTarget(alias: route53.IAliasRecordTarget): void;
 }
 
 export interface ICloudFrontConfiguration {

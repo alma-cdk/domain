@@ -53,7 +53,7 @@ const distribution = new cloudfront.Distribution(this, 'Distribution', {
 })
 
 // assign CloudFront distribution to given fqdn with A + AAAA records
-domain.assign(new targets.CloudFrontTarget(distribution))
+domain.addTarget(new targets.CloudFrontTarget(distribution))
 ```
 
 <br/>
@@ -71,7 +71,7 @@ const distribution = new cloudfront.Distribution(this, 'Distribution', {
 })
 
 // assign CloudFront distribution to given fqdn with A + AAAA records
-domain.assign(new targets.CloudFrontTarget(distribution))
+domain.addTarget(new targets.CloudFrontTarget(distribution))
 ```
 
 Note: The returned domain names configuration is `domainNames: [domain.fqdn]`, meaning this only works in scenarios where your CloudFront distribution has only single domain name.
