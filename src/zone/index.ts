@@ -19,6 +19,7 @@ export abstract class DomainZone {
   private static isZone(value: any): value is route53.IHostedZone {
     return (
       typeof value !== 'undefined'
+      && typeof value !== 'string'
       && 'hostedZoneId' in value
       && 'zoneName' in value
       && 'hostedZoneArn' in value
