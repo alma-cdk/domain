@@ -60,16 +60,9 @@ domain.assign(new targets.CloudFrontTarget(distribution))
 
 ### CloudFront helper
 
-```ts
-import { Domain } from '@alma-cdk/domain';
-import * as cloudfront from 'aws-cdk-lib/aws-cloudfront';
-```
-```ts
-const domain = new Domain(this, 'Domain', {
-  zone: 'example.com', // retrieve the zone via lookup, or provide IHostedZone
-  subdomain: 'foobar', // optional subdomain
-});
+Instead of assigning `certificate`, `domainNames` and `enableIpv6` properties individually, you may choose to use the one-liner helper utility method `configureCloudFront()` to set all three values at once (don't forget to use object spread syntaxs):
 
+```ts
 const distribution = new cloudfront.Distribution(this, 'Distribution', {
   /* other cloudfront configuration values removed for brevity */
 
