@@ -49,14 +49,14 @@ const distribution = new cloudfront.Distribution(this, 'Distribution', {
 
   certificate: domain.certificate, // reference to created ICertificate
   domainNames: [domain.fqdn], // foobar.example.com
-  enableIpv6: domain.enableIpv6, // true by default (set disableIpV6 to true on init...) TODO FIX
+  enableIpv6: domain.enableIpv6, // true by default – set enableIpv6 prop to false during new Domain()
 })
 
 // assign CloudFront distribution to given fqdn with A + AAAA records
 domain.assign(new targets.CloudFrontTarget(distribution))
 ```
 
-
+<br/>
 
 ### CloudFront helper
 
