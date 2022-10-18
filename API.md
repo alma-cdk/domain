@@ -45,7 +45,7 @@ new Domain(scope: Construct, id: string, props: DomainProps)
 | **Name** | **Description** |
 | --- | --- |
 | <code><a href="#@alma-cdk/domain.Domain.toString">toString</a></code> | Returns a string representation of this construct. |
-| <code><a href="#@alma-cdk/domain.Domain.assign">assign</a></code> | Assign an alias record target with the fully-qualified domain name. |
+| <code><a href="#@alma-cdk/domain.Domain.addTarget">addTarget</a></code> | Assign an alias as record target with the fully-qualified domain name. |
 | <code><a href="#@alma-cdk/domain.Domain.configureCloudFront">configureCloudFront</a></code> | Helper method to configure CloudFront distribution with the domain, certificate and IPv6 support. |
 
 ---
@@ -58,13 +58,13 @@ public toString(): string
 
 Returns a string representation of this construct.
 
-##### `assign` <a name="assign" id="@alma-cdk/domain.Domain.assign"></a>
+##### `addTarget` <a name="addTarget" id="@alma-cdk/domain.Domain.addTarget"></a>
 
 ```typescript
-public assign(alias: IAliasRecordTarget): void
+public addTarget(alias: IAliasRecordTarget): void
 ```
 
-Assign an alias record target with the fully-qualified domain name.
+Assign an alias as record target with the fully-qualified domain name.
 
 This will create both `A` & `AAAA` DNS records, unless `disableIpV6` was set to `true`
 during initialization of `Domain` construct (resulting in only `A` record being created).
@@ -72,11 +72,11 @@ during initialization of `Domain` construct (resulting in only `A` record being 
 *Example*
 
 ```typescript
-domain.assign(new targets.CloudFrontTarget(distribution))
+domain.addTarget(new targets.CloudFrontTarget(distribution))
 ```
 
 
-###### `alias`<sup>Required</sup> <a name="alias" id="@alma-cdk/domain.Domain.assign.parameter.alias"></a>
+###### `alias`<sup>Required</sup> <a name="alias" id="@alma-cdk/domain.Domain.addTarget.parameter.alias"></a>
 
 - *Type:* aws-cdk-lib.aws_route53.IAliasRecordTarget
 
@@ -357,17 +357,17 @@ Interface contract implemented by Domain construct.
 
 | **Name** | **Description** |
 | --- | --- |
-| <code><a href="#@alma-cdk/domain.IDomain.assign">assign</a></code> | Assign an alias record target with the fully-qualified domain name. |
+| <code><a href="#@alma-cdk/domain.IDomain.addTarget">addTarget</a></code> | Assign an alias as record target with the fully-qualified domain name. |
 
 ---
 
-##### `assign` <a name="assign" id="@alma-cdk/domain.IDomain.assign"></a>
+##### `addTarget` <a name="addTarget" id="@alma-cdk/domain.IDomain.addTarget"></a>
 
 ```typescript
-public assign(alias: IAliasRecordTarget): void
+public addTarget(alias: IAliasRecordTarget): void
 ```
 
-Assign an alias record target with the fully-qualified domain name.
+Assign an alias as record target with the fully-qualified domain name.
 
 This will create both `A` & `AAAA` DNS records, unless `disableIpV6` was set to `true`
 during initialization of `Domain` construct (resulting in only `A` record being created).
@@ -375,11 +375,11 @@ during initialization of `Domain` construct (resulting in only `A` record being 
 *Example*
 
 ```typescript
-domain.assign(new targets.CloudFrontTarget(distribution))
+domain.addTarget(new targets.CloudFrontTarget(distribution))
 ```
 
 
-###### `alias`<sup>Required</sup> <a name="alias" id="@alma-cdk/domain.IDomain.assign.parameter.alias"></a>
+###### `alias`<sup>Required</sup> <a name="alias" id="@alma-cdk/domain.IDomain.addTarget.parameter.alias"></a>
 
 - *Type:* aws-cdk-lib.aws_route53.IAliasRecordTarget
 
