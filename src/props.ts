@@ -29,12 +29,12 @@ export interface DomainProps {
   readonly region?: string;
 
   /**
-   * Set to true to disable IPv6 `AAAA` record creation.
+   * Set to false to disable IPv6 `AAAA` record creation.
    *
    * @default
-   * false
+   * true
    */
-  readonly disableIpV6?: boolean;
+  readonly enableIpv6?: boolean;
 
   /**
    * Provide your own pre-existing certificate.

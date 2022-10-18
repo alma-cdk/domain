@@ -22,6 +22,13 @@ export interface IDomain {
   readonly certificate: acm.ICertificate;
 
   /**
+   * Has IPv6 AAAA records been created.
+   * Can be used to conditionally configure IPv6 support
+   * to CloudFront distribution.
+   */
+  readonly enableIpv6: boolean;
+
+  /**
    * Assign an alias record target with the fully-qualified domain name.
    * This will create both `A` & `AAAA` DNS records, unless `disableIpV6` was set to `true`
    * during initialization of `Domain` construct (resulting in only `A` record being created).
@@ -32,4 +39,25 @@ export interface IDomain {
    * domain.assign(new targets.CloudFrontTarget(distribution))
    */
   assign(alias: route53.IAliasRecordTarget): void;
+}
+
+export interface ICloudFrontConfiguration {
+
+  /**
+   * 	Alternative domain names for this distribution.
+   */
+  readonly domainNames: string[];
+
+  /**
+   * Certificate Manager certificate.
+   */
+  readonly certificate: acm.ICertificate;
+
+
+  /**
+   * Has IPv6 AAAA records been created.
+   * Can be used to conditionally configure IPv6 support
+   * to CloudFront distribution.
+   */
+  readonly enableIpv6: boolean;
 }

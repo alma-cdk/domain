@@ -49,6 +49,7 @@ const distribution = new cloudfront.Distribution(this, 'Distribution', {
 
   certificate: domain.certificate, // reference to created ICertificate
   domainNames: [domain.fqdn], // foobar.example.com
+  enableIpv6: domain.enableIpv6, // true by default (set disableIpV6 to true on init...) TODO FIX
 })
 
 // assign CloudFront distribution to given fqdn with A + AAAA records
@@ -57,3 +58,25 @@ domain.assign(new targets.CloudFrontTarget(distribution))
 
 
 
+### CloudFront helper
+
+```ts
+import { Domain } from '@alma-cdk/domain';
+import * as cloudfront from 'aws-cdk-lib/aws-cloudfront';
+```
+```ts
+const domain = new Domain(this, 'Domain', {
+  zone: 'example.com', // retrieve the zone via lookup, or provide IHostedZone
+  subdomain: 'foobar', // optional subdomain
+});
+
+const distribution = new cloudfront.Distribution(this, 'Distribution', {
+  /* other cloudfront configuration values removed for brevity */
+
+  // one-liner to configure certificate, domainNames and IPv6 support
+  ...domain.configureCloudFront(),
+})
+
+// assign CloudFront distribution to given fqdn with A + AAAA records
+domain.assign(new targets.CloudFrontTarget(distribution))
+```

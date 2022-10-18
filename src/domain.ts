@@ -2,7 +2,7 @@ import * as acm from 'aws-cdk-lib/aws-certificatemanager';
 import * as route53 from 'aws-cdk-lib/aws-route53';
 import { Construct } from 'constructs';
 import { DomainCertificate } from './certificate';
-import { IDomain } from './contract';
+import { ICloudFrontConfiguration, IDomain } from './contract';
 import { addError } from './errors/add';
 import { FQDN } from './fqdn';
 import { DomainProps } from './props';
@@ -26,7 +26,13 @@ export class Domain extends Construct implements IDomain {
    */
   readonly certificate: acm.ICertificate;
 
-  private disableIpV6: boolean;
+  /**
+   * Has IPv6 AAAA records been created.
+   * Can be used to conditionally configure IPv6 support
+   * to CloudFront distribution.
+   */
+  readonly enableIpv6: boolean;
+
   private region: string;
   private assigned: boolean = false;
 
@@ -42,13 +48,13 @@ export class Domain extends Construct implements IDomain {
 
     const {
       certificate,
-      disableIpV6 = false,
+      enableIpv6 = true,
       region = 'us-east-1',
       subdomain,
       zone,
     } = props;
 
-    this.disableIpV6 = disableIpV6;
+    this.enableIpv6 = enableIpv6;
 
     this.zone = DomainZone.define(this, { zone });
 
@@ -95,7 +101,7 @@ export class Domain extends Construct implements IDomain {
     });
 
     // return early if IPv6 is disabled
-    if (this.disableIpV6) return;
+    if (!this.enableIpv6) return;
 
     // set IPv6 record
     new route53.AaaaRecord(this, 'AliasRecordIpV6', {
@@ -103,5 +109,19 @@ export class Domain extends Construct implements IDomain {
       target: route53.RecordTarget.fromAlias(alias),
     });
 
+  }
+
+  /**
+   * Helper method to configure CloudFront distribution with the domain,
+   * certificate and IPv6 support.
+   *
+   * @returns CloudFront configuration for certificate, domainNames and IPv6
+   */
+  public configureCloudFront(): ICloudFrontConfiguration {
+    return {
+      certificate: this.certificate,
+      domainNames: [this.fqdn],
+      enableIpv6: this.enableIpv6,
+    };
   }
 }
