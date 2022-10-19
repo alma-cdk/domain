@@ -97,6 +97,7 @@ export class Domain extends Construct implements IDomain {
     // set IPv4 record
     new route53.ARecord(this, 'AliasRecordIpV4', {
       zone: this.zone,
+      recordName: this.fqdn,
       target: route53.RecordTarget.fromAlias(alias),
     });
 
@@ -106,6 +107,7 @@ export class Domain extends Construct implements IDomain {
     // set IPv6 record
     new route53.AaaaRecord(this, 'AliasRecordIpV6', {
       zone: this.zone,
+      recordName: this.fqdn,
       target: route53.RecordTarget.fromAlias(alias),
     });
 
